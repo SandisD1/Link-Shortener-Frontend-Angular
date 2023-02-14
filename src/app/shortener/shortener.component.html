@@ -1,0 +1,158 @@
+<mat-grid-list cols="20" rowHeight="50px">
+  <mat-grid-tile
+    [colspan]="sidebar.cols"
+    [rowspan]="sidebar.rows"
+    [style.background]="sidebar.color">
+  </mat-grid-tile>
+  <mat-grid-tile
+    [colspan]="formSide.cols"
+    [rowspan]="formSide.rows"
+    [style.background]="formSide.color">
+  </mat-grid-tile>
+  <mat-grid-tile
+    [colspan]="header.cols"
+    [rowspan]="header.rows"
+    [style.background]="header.color">
+    <mat-card-title>
+      Link Shortener
+    </mat-card-title>
+  </mat-grid-tile>
+  <mat-grid-tile
+    [colspan]="formSide.cols"
+    [rowspan]="formSide.rows"
+    [style.background]="formSide.color">
+  </mat-grid-tile>
+  <mat-grid-tile
+    [colspan]="sidebar.cols"
+    [rowspan]="sidebar.rows"
+    [style.background]="sidebar.color">
+  </mat-grid-tile>
+  <mat-grid-tile
+    [colspan]="header.cols"
+    [rowspan]="header.rows"
+    [style.background]="header.color">
+    <mat-form-field appearance="outline" class="slider">
+      <mat-label>Enter you Link!</mat-label>
+      <input [(ngModel)]="inputValue" matInput type="text">
+      <button (click)="shorten()" color="primary" mat-icon-button matSuffix>
+        <mat-icon>content_cut</mat-icon>
+      </button>
+    </mat-form-field>
+  </mat-grid-tile>
+  <mat-grid-tile
+    [colspan]="button.cols"
+    [rowspan]="button.rows"
+    [style.background]="button.color">
+    <button (click)="setActive()"
+            [class.active]="isActive('')"
+            class="form-button"
+            color="primary"
+            mat-stroked-button type="button">No expiration
+    </button>
+  </mat-grid-tile>
+  <mat-grid-tile
+    [colspan]="seperator.cols"
+    [rowspan]="seperator.rows"
+    [style.background]="seperator.color">
+  </mat-grid-tile>
+  <mat-grid-tile
+    [colspan]="button.cols"
+    [rowspan]="button.rows"
+    [style.background]="button.color">
+    <button (click)="setActive('days')"
+            [class.active]="isActive('days')"
+            class="form-button" color="primary"
+            mat-stroked-button type="button">Expiration days
+    </button>
+  </mat-grid-tile>
+  <mat-grid-tile
+    [colspan]="seperator.cols"
+    [rowspan]="seperator.rows"
+    [style.background]="seperator.color">
+  </mat-grid-tile>
+  <mat-grid-tile
+    [colspan]="button.cols"
+    [rowspan]="button.rows"
+    [style.background]="button.color">
+    <button (click)="setActive('weeks')"
+            [class.active]="isActive('weeks')"
+            class="form-button"
+            color="primary"
+            mat-stroked-button type="button">Expiration Weeks
+    </button>
+  </mat-grid-tile>
+  <mat-grid-tile
+    [colspan]="header.cols"
+    [rowspan]="header.rows"
+    [style.background]="header.color">
+    <mat-card-content *ngIf="expirationUnit === 'days'" class="slider">
+      <mat-slider [(ngModel)]="expirationAmount"
+                  [max]="7"
+                  [min]="1"
+                  [thumbLabel]="true"
+                  class="slider"
+                  color="primary"
+      ></mat-slider>
+    </mat-card-content>
+    <mat-card-content *ngIf="expirationUnit === 'weeks' ">
+      <button (click)="lessWeeks()" [disabled]="expirationAmount<2" color="primary" mat-mini-fab>
+        <mat-icon>remove</mat-icon>
+      </button>
+      <button color="accent" mat-button>
+        {{expirationAmount}}
+      </button>
+      <button (click)="moreWeeks()" [disabled]="expirationAmount>7" color="primary" mat-mini-fab>
+        <mat-icon>add</mat-icon>
+      </button>
+    </mat-card-content>
+  </mat-grid-tile>
+  <mat-grid-tile *ngIf="newPost$ | async as post"
+                 [colspan]="header.cols"
+                 [rowspan]="header.rows"
+                 [style.background]="header.color">
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>
+          Your shortened link is ready!:
+        </mat-card-title>
+        <mat-card-subtitle>
+          {{post.url}}
+        </mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-footer *ngIf="post.expires">
+        It expires on:
+        {{post.expires}}
+      </mat-card-footer>
+    </mat-card>
+    <mat-card class="copy-button">
+      <mat-card-actions align="end" class="copy-button">
+        <button [cdkCopyToClipboard]="post.url" class="copy-button" mat-icon-button>
+          <mat-icon>content_copy</mat-icon>
+        </button>
+      </mat-card-actions>
+    </mat-card>
+  </mat-grid-tile>
+  <mat-grid-tile
+    [colspan]="header.cols"
+    [rowspan]="header.rows"
+    [style.background]="header.color">
+    <button (click)="getStats()"
+            class="form-button"
+            color="primary"
+            mat-stroked-button type="button">See latest service stats
+    </button>
+  </mat-grid-tile>
+  <mat-grid-tile
+    [colspan]="header.cols"
+    [rowspan]="header.rows"
+    [style.background]="header.color">
+    <mat-card *ngIf="aggregatedStats$ | async as stats">
+      <mat-card-content>
+        Currently there are {{stats.totalShortenedUrlCount}} shortened URLs saved.
+      </mat-card-content>
+      <mat-card-content>
+        Saved shortened URLs have been used {{stats.shortenedUrlsConsumedCount}} times.
+      </mat-card-content>
+    </mat-card>
+  </mat-grid-tile>
+</mat-grid-list>
